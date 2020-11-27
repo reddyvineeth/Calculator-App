@@ -1,0 +1,75 @@
+{% extends "index.html" %}
+
+
+{% block mainContent %}
+
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-8">Simple Calculator</h1>
+        <p class="lead"> You can try out my awesome calculator</p>       
+    </div>
+</div>
+
+<form class="container" action="{{url_for('calculate')}}" method="post">
+    <div class="row">
+        <div class="col-lg-2 col-md-3">
+            <input type="number" name="firstNumber" class="form-control" placeholder="Insert First Number" required>
+        </div>
+        
+        <div class="col-lg-2">
+            <select id="selectOperation" class="form-control" name="operation" required>
+                <option value="">Select...</option>
+                <option value="plus">+</option>
+                <option value="minus">-</option>
+                <option value="multiply">*</option>
+                <option value="divide">/</option>
+            </select>
+
+        </div>
+
+        <div class="col-lg-2 col-md-3">
+            <input type="number" name="secondNumber" class="form-control" placeholder="Insert Second Number" required>
+        </div>
+        <div class="col-lg-3">
+            <input type="submit" value="calculate" class="btn btn-primary"/>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="alert {{color}}">{{note}}</div>
+        </div>
+
+    </div>
+
+    <div class="row mt-3">
+
+        <div class="col-lg-1">
+            <div class="text-center">=</div>
+        </div>
+
+        <div class="col-lg-3">
+            <input type="text" class="form-control" placeholder="Result" value={{result}}>
+        </div>
+
+    </div>
+</form>
+<form style="margin-left: 590px;">
+    <div class="row mt-3">
+        <div class="col-lg-1">
+            <div class="text-bold text-center">History</div>
+        </div>
+    </div>
+
+    <!-- <button type="submit" style="position: relative;margin-left: 84px;bottom: 21px;">clear</button> -->
+    <!-- <button type="submit" style="position: relative;margin-left: 84px;bottom: 21px;" class="btn btn-danger">clear</button> -->
+    {% for result in list %}
+        <div class="row mt-3">
+            <div class="col-lg-3">{{result}}</div>
+        </div>
+    {% endfor %}
+    
+
+</form>
+
+
+{% endblock %}
