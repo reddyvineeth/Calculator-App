@@ -1,11 +1,22 @@
 from flask import Flask, render_template, url_for, request
 from math import sin, cos, tan, sqrt, exp, log, acosh, asinh, atanh, asin, acos
+from flask_socketio import SocketIO, emit
+import uuid
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+app.config['SESSION_TYPE'] = 'filesystem'
+socket = SocketIO(app)
 my_list_simple = []
 my_list_advanced = []
+session = {}
+class Session:
+  def __init__(self, uId):
+    self.uId = uId
+
 @app.route('/')
 def main():
+    my_list_simple = []
     return render_template('index.html',home=True)
 
 @app.route("/advanced")
@@ -17,27 +28,28 @@ def advanced():
 @app.route("/simple")
 def simple():
     my_list_simple = []
-    #my_list_advanced = []
-    return render_template("simple.html")
+    uu_id = uuid.uuid4()
+    session[uu_id] = uu_id
+    print(session)
+    return render_template("simple.html", sessionId=uu_id)
 
-# @app.route("/clearSimplehistory", methods=["get"])
-# def clearSimpleHistory():
-#     #my_list_simple = []
-#     return render_template("simple.html")
+@socket.on('connect', namespace='/test')
+def on_connect():
+    emit('connect', 'connection established')
 
-
-# @app.route("/clearAdvancedhistory", methods=["get"])
-# def clearAdvancedHistory():
-#     #my_list_advanced = []
-#     return render_template("advanced.html")
+@socket.on('post result', namespace='/test')
+def on_broadcast(msg):
+    emit('broadcast', msg, broadcast=True, include_self=False)
 
 
 @app.route("/calculate", methods=["post"])
 def calculate():
     #request.method
+    print(request)
     first_number = int(request.form["firstNumber"])
     operation = request.form["operation"]
     second_number = int(request.form["secondNumber"])
+    sessionId = request.form["sessionId"]
     note = ""
     color = "alert-success"
     if operation == "plus":
@@ -55,7 +67,7 @@ def calculate():
     else:
         note = "There is an error, please try again"
         color = "alert-warning"
-        return render_template("simple.html", note=note, color=color)
+        return render_template("simple.html", note=note, color=color, sessionId=sessionId)
 
     if operation == 'plus':
         operation = '+'
@@ -65,13 +77,14 @@ def calculate():
         operation = '*'
     elif operation == 'divide':
         operation = '/'
-    
+
     store = str(first_number) + operation + str(second_number) + ' = '+str(result)
+
     if len(my_list_simple) >= 10:
         my_list_simple.pop()
     my_list_simple.insert(0, store)
     
-    return render_template("simple.html",result=result, note=note, color=color, list = my_list_simple)
+    return render_template("simple.html",result=result, note=note, color=color, list = my_list_simple, sessionId=sessionId)
 
 
 @app.route("/calculate_advanced", methods=["post"])
@@ -125,6 +138,6 @@ def calculate_advanced():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socket.run(app, debug=True)
 
 
