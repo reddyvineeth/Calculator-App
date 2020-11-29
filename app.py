@@ -19,12 +19,6 @@ def main():
     my_list_simple = []
     return render_template('index.html',home=True)
 
-@app.route("/advanced")
-def advanced():
-    my_list_advanced = []
-    return render_template("advanced.html")
-
-
 @app.route("/simple")
 def simple():
     my_list_simple = []
@@ -37,9 +31,9 @@ def simple():
 def on_connect():
     emit('connect', 'connection established')
 
-@socket.on('post result', namespace='/test')
-def on_broadcast(msg):
-    emit('broadcast', msg, broadcast=True, include_self=False)
+# @socket.on('post result', namespace='/test')
+# def on_broadcast(msg):
+#     emit('broadcast', msg, broadcast=True, include_self=False)
 
 
 @app.route("/calculate", methods=["post"])
@@ -85,57 +79,6 @@ def calculate():
     my_list_simple.insert(0, store)
     
     return render_template("simple.html",result=result, note=note, color=color, list = my_list_simple, sessionId=sessionId)
-
-
-@app.route("/calculate_advanced", methods=["post"])
-def calculate_advanced():
-    first_number = int(request.form["firstNumber"])
-    operation = request.form["operation"]
-    color="alert-success"
-    note=""
-    if operation == "sin":
-        result = sin(first_number)
-        note="sin has been calculated"
-    elif operation == "cos":
-        result = cos(first_number)
-        note="cosine has been calculated"
-    elif operation == "tan":
-        result = tan(first_number)
-        note="tan has been calculated"
-    elif operation == "log":
-        result = log(first_number)
-        note="log of a number has been calculated"
-    elif operation == "exp":
-        result = exp(first_number)
-        note = "exp has been calculated"
-    elif operation == "squr":
-        result = sqrt(first_number)
-        note = "square root has been calculated"
-    else:
-        note="no function has been selected"
-        color="alert-danger"
-        return render_template("advanced.html", note=note, color=color)
-
-    if operation == 'sin':
-        operation = 'sin'
-    elif operation == 'cos':
-        operation = 'cos'
-    elif operation == 'tan':
-        operation = 'tan'
-    elif operation == 'log':
-        operation = 'log'
-    elif operation == 'exp':
-        operation = 'exp'
-    elif operation == 'squr':
-        operation = 'sqrt'
-    
-    store = operation + '(' + str(first_number) + ')' + ' = ' + str(result)
-    if len(my_list_advanced) >= 10:
-        my_list_advanced.pop()
-    my_list_advanced.insert(0, store)
-
-    return render_template("advanced.html",result=result, note=note, color=color, list=my_list_advanced)
-
 
 if __name__ == "__main__":
     socket.run(app, debug=True)

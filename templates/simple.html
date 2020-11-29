@@ -50,7 +50,7 @@
     <div class="col-lg-3">
       <div class="alert {{color}}">{{note}}</div>
     </div>
-    <input type="hidden" name="sessionId" value="{{sessionId}}" />
+    <input type="hidden" name="sessionId" value="{{sessionId}}"/>
   </div>
 
   <div class="row mt-3">
@@ -71,7 +71,9 @@
 <div style="margin-left: 590px">
   <div class="row mt-3">
     <div class="col-lg-1">
-      <div class="text-bold text-center">History</div>
+      <div class="text-bold text-center">
+        <p>History</p>
+      </div>
     </div>
   </div>
 
@@ -80,13 +82,17 @@
   {% for result in list %}
   <div class="row mt-3">
     <div class="col-lg-3">{{result}}</div>
-    <button onclick="broadCast(this, '{{result}}')" id="broadCast" data-sessionId="{{sessionId}}">post result</button>
+    <!-- <button style="position: relative;
+    right: 200px;" onclick="broadCast(this, '{{result}}')" id="broadCast" data-sessionId="{{sessionId}}">post result</button> -->
   </div>
   {% endfor %}
-  <div class="row mt-3">
-    <div class="other-results"></div>
+  <!-- <div class="row mt-3" style="position: relative; left: 300px; bottom: 500px;">
+       <div>Posted Results</div>
   </div>
-</div>
+  <div class="other-results" style="margin-left: 300px;
+  position: relative;
+  bottom: 500px;"></div>
+</div> -->
 <script>
     document.addEventListener('DOMContentLoaded', connectTosocket, false);
     const socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
@@ -104,20 +110,20 @@
         appendToContainer(msg);
     })
 
-    function broadCast(event, value) {
-        socket.emit('post result', {
-            data: value,
-            sessionId: event?.dataset?.sessionid
-        });
-    }
+    // function broadCast(event, value) {
+    //     socket.emit('post result', {
+    //         data: value,
+    //         sessionId: event?.dataset?.sessionid
+    //     });
+    // }
 
-    function appendToContainer({ data }) {
-        const conatiner = document.querySelector('.other-results');
-        const res = document.createElement('div');
+    // function appendToContainer({ data }) {
+    //     const conatiner = document.querySelector('.other-results');
+    //     const res = document.createElement('div');
         
-        res.innerHTML = data;
-        conatiner.append(res);
-    }
+    //     res.innerHTML = data;
+    //     conatiner.append(res);
+    // }
 
 </script>
 

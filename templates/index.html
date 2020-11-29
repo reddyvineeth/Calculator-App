@@ -28,10 +28,6 @@
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('simple')}}">Simple</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('advanced')}}">Advanced</a>
-        </li>
-
       </ul>
     </div>
   </nav>
@@ -43,15 +39,6 @@
         <a class="alert alert-primary" href="{{url_for('simple')}}">Use Simple Calculator</h1></a>
       <p class="lead text-center alert alert-primary mt-5">This simple calculator can, add, subtract, multiply and
         divide two numbers</p>
-    </div>
-  </div>
-
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <h1 class="display-8 text-center">
-        <a class="alert alert-success" href="{{url_for('advanced')}}">Use Advanced Calculator</h1></a>
-      <p class="lead text-center alert alert-success mt-5">This Advanced calculator has several advanced math functions
-      </p>
     </div>
   </div>
   {% endif %}
